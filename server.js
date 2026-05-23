@@ -5,38 +5,28 @@ require("dotenv").config();
 
 const app = express();
 
-// ================= MIDDLEWARE =================
+// ===== MIDDLEWARE =====
 app.use(cors());
 app.use(express.json());
 
-// ================= DATABASE =================
+// ===== DATABASE =====
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected 🚀"))
   .catch(err => console.log("MongoDB Error:", err));
 
-// ================= ROUTES =================
+// ===== ROUTES =====
+app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/ai", require("./routes/aiRoutes"));
+app.use("/api/exam", require("./routes/examRoutes"));
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
-});
-
-
-
-
-const authRoutes = require("./routes/authRoutes");
-app.use("/api/auth", authRoutes);
-
-// ================= TEST ROUTE =================
+// ===== TEST ROUTE =====
 app.get("/", (req, res) => {
   res.send("Backend Running 🚀");
 });
 
-mongoose.connect(process.env.MONGO_URI)
-console.log("MONGO URI:", process.env.MONGO_URI);
-const aiRoutes = require("./routes/aiRoutes");
-app.use("/api/ai", require("./routes/aiRoutes"));
-app.use("/api/ai", require("./routes/aiRoutes"));
-app.use("/api/exam", require("./routes/examRoutes"));
-const cors = require("cors");
-app.use(cors());
-app.use(express.json());
+// ===== SERVER START =====
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log("Server running on port", PORT);
+});
